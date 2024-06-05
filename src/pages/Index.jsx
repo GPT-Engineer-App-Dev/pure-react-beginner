@@ -1,11 +1,14 @@
 import { Container, Text, VStack, Box, Flex, Spacer, Heading, IconButton, Input, Button, FormControl, FormLabel } from "@chakra-ui/react";
 import { FaBars } from "react-icons/fa";
-
 import { useState } from "react";
+import { useSupabaseAuth, SupabaseAuthUI } from "../integrations/supabase/auth.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { session } = useSupabaseAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -13,6 +16,11 @@ const Index = () => {
     console.log("Email:", email);
     console.log("Password:", password);
   };
+
+  if (session) {
+    navigate("/authenticated");
+  }
+
   return (
     <Container maxW="container.xl" p={0}>
       <Flex as="nav" bg="blue.500" color="white" p={4} align="center">
@@ -49,6 +57,7 @@ const Index = () => {
               <Button type="submit" colorScheme="blue" width="full">Login</Button>
             </VStack>
           </Box>
+          <SupabaseAuthUI />
         </VStack>
       </Flex>
     </Container>
